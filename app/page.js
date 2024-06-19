@@ -66,96 +66,111 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
-      <h1 className="text-2xl font-bold mb-4">Select your choices</h1>
-
-      <div className="mb-4 w-72">
-        <label htmlFor="firstChoice" className="block text-lg font-medium text-gray-700 mb-2">First Choice</label>
-        <select
-          id="firstChoice"
-          value={choices.firstChoice}
-          onChange={handleChange}
-          className="block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-        >
-          <option value="" disabled>Select an option</option>
-          <option value="Read">Read</option>
-          <option value="Write">Write</option>
-          <option value="Erase">Erase</option>
-          <option value="Update">Update</option>
-        </select>
-      </div>
-
-      <div className="mb-4 w-72">
-        <label htmlFor="secondChoice" className="block text-lg font-medium text-gray-700 mb-2">Second Choice</label>
-        <select
-          id="secondChoice"
-          value={choices.secondChoice}
-          onChange={handleChange}
-          className="block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-        >
-          <option value="" disabled>Select an option</option>
-          <option value="Option A">Option A</option>
-          <option value="Option B">Option B</option>
-          <option value="Option C">Option C</option>
-        </select>
-      </div>
-
-      <div className="mb-4 w-72">
-        <label htmlFor="numberInput" className="block text-lg font-medium text-gray-700 mb-2">Number Input (Enabled if "Read")</label>
-        <input
-          type="number"
-          id="numberInput"
-          value={choices.numberInput}
-          onChange={handleChange}
-          disabled={choices.firstChoice !== 'Read'}
-          className={`block w-full px-3 py-2 border ${choices.firstChoice === 'Read' ? 'border-gray-300' : 'border-gray-200 bg-gray-200 cursor-not-allowed'} rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500`}
-        />
-      </div>
-
-      <div className="mb-4 w-72">
-        <label htmlFor="fileInput" className="block text-lg font-medium text-gray-700 mb-2">File Input (Enabled if "Update")</label>
-        <div className="relative flex items-center justify-center">
-          <input
-            type="file"
-            id="fileInput"
-            onChange={handleChange}
-            disabled={choices.firstChoice !== 'Update'}
-            className={`absolute inset-0 w-full h-full opacity-0 ${choices.firstChoice === 'Update' ? "cursor-pointer" : "cursor-not-allowed"}`}
-          />
-          <button
-            type="button"
-            className={`flex items-center justify-center w-16 h-16 rounded-full text-white ${choices.firstChoice === 'Update' ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-200 cursor-not-allowed'}`}
-            disabled={choices.firstChoice !== 'Update'}
-          >
-            <FontAwesomeIcon icon={faUpload} className="text-2xl" />
-          </button>
+<div className='flex justify-center items-center  min-h-screen bg-gray-100 overflow-x-hidden'>
+      
+    <div className='  flex gap-10 justify-center  flex-col md:flex-row  p-4'>
+        
+        <div className=" mx-5  pt-3 pb-4 rounded-xl  w-72 lg:w-[500px] ">
+          <h1 className="text-2xl font-bold mb-4">Select your choices</h1>
+      
+          <div className="mb-4 w-72 lg:w-[500px]">
+            <label htmlFor="firstChoice" className="block text-lg font-medium text-gray-700 mb-2">First Choice</label>
+            <select
+              id="firstChoice"
+              value={choices.firstChoice}
+              onChange={handleChange}
+              className="block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            >
+              <option value="" disabled>Select an option</option>
+              <option value="Read">Read</option>
+              <option value="Write">Write</option>
+              <option value="Erase">Erase</option>
+              <option value="Update">Update</option>
+            </select>
+          </div>
+      
+          <div className="mb-4 w-72 lg:w-[500px]">
+            <label htmlFor="secondChoice" className="block text-lg font-medium text-gray-700 mb-2">Second Choice</label>
+            <select
+              id="secondChoice"
+              value={choices.secondChoice}
+              onChange={handleChange}
+              className="block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            >
+              <option value="" disabled>Select an option</option>
+              <option value="Option A">Option A</option>
+              <option value="Option B">Option B</option>
+              <option value="Option C">Option C</option>
+            </select>
+          </div>
+      
+          <div className="mb-4 w-72 lg:w-[500px]">
+            <label htmlFor="numberInput" className="block text-lg font-medium text-gray-700 mb-2">Number Input (Enabled if "Read")</label>
+            <input
+              type="number"
+              id="numberInput"
+              value={choices.numberInput}
+              onChange={handleChange}
+              disabled={choices.firstChoice !== 'Read'}
+              className={`block w-full px-3 py-2 border ${choices.firstChoice === 'Read' ? 'border-gray-300' : 'border-gray-200 bg-gray-200 cursor-not-allowed'} rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500`}
+            />
+          </div>
+      
+          <div className="mb-4 w-72 lg:w-[500px]">
+            <label htmlFor="fileInput" className="block text-lg font-medium text-gray-700 mb-2">File Input (Enabled if "Update")</label>
+            <div className="relative flex items-center justify-center">
+              <input
+                type="file"
+                id="fileInput"
+                onChange={handleChange}
+                disabled={choices.firstChoice !== 'Update'}
+                className={`absolute inset-0 w-full h-full opacity-0 ${choices.firstChoice === 'Update' ? "cursor-pointer" : "cursor-not-allowed"}`}
+              />
+              <button
+                type="button"
+                className={`flex items-center mt-7 justify-center w-16 h-16 rounded-full text-white ${choices.firstChoice === 'Update' ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-200 cursor-not-allowed'}`}
+                disabled={choices.firstChoice !== 'Update'}
+              >
+                <FontAwesomeIcon icon={faUpload} className="text-2xl" />
+              </button>
+            </div>
+          </div>
+      
+          <div className="mt-6 w-72 lg:w-[500px]">
+            <p className="text-lg">
+              First Choice: <span className="font-medium text-indigo-600">{choices.firstChoice || 'None'}</span>
+            </p>
+            <p className="text-lg">
+              Second Choice: <span className="font-medium text-indigo-600">{choices.secondChoice || 'None'}</span>
+            </p>
+            <p className="text-lg">
+              Number Input: <span className="font-medium text-indigo-600">{choices.numberInput || 'None'}</span>
+            </p>
+            <p className="text-lg">
+              File Input: <span className="font-medium text-indigo-600">{choices.fileInput ? choices.fileInput.name : 'None'}</span>
+            </p>
+          </div>
+      
+          <div className='mt-6 text-center'>
+            <button 
+              onClick={handleSubmit} 
+              disabled={choices.firstChoice === "" || submitting} 
+              className={`text-center py-3 px-5 rounded-xl text-white ${choices.firstChoice === "" ? "bg-gray-200 cursor-not-allowed" : "bg-green-600 hover:bg-green-800"}`}
+            >
+              {submitting ? 'Submitting...' : 'Submit'}
+            </button>
+          </div>
         </div>
-      </div>
-
-      <div className="mt-6 w-72">
-        <p className="text-lg">
-          First Choice: <span className="font-medium text-indigo-600">{choices.firstChoice || 'None'}</span>
-        </p>
-        <p className="text-lg">
-          Second Choice: <span className="font-medium text-indigo-600">{choices.secondChoice || 'None'}</span>
-        </p>
-        <p className="text-lg">
-          Number Input: <span className="font-medium text-indigo-600">{choices.numberInput || 'None'}</span>
-        </p>
-        <p className="text-lg">
-          File Input: <span className="font-medium text-indigo-600">{choices.fileInput ? choices.fileInput.name : 'None'}</span>
-        </p>
-      </div>
-
-      <div className='mt-6'>
-        <button 
-          onClick={handleSubmit} 
-          disabled={choices.firstChoice === "" || submitting} 
-          className={`text-center py-3 px-5 rounded-xl text-white ${choices.firstChoice === "" ? "bg-gray-200 cursor-not-allowed" : "bg-green-600 hover:bg-green-800"}`}
-        >
-          {submitting ? 'Submitting...' : 'Submit'}
-        </button>
-      </div>
+  
+        <div className="mx-5 border-4 border-indigo-500 px-3 pt-3 pb-4 w-72  lg:w-[500px] rounded-xl text-indigo-800 font-bold align-middle ">
+          <h1 className='text-center text-2xl my-5 '>Request Result</h1>
+          {Object.entries(data).map(([key, value]) => (
+            <p className="text-lg" key={key}>
+              {key}: <span className="font-medium text-indigo-600">{value ? value.name || value : 'None'}</span>
+            </p>
+          ))}
+        </div>
     </div>
+</div>
   );
 }
