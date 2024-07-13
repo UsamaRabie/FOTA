@@ -27,11 +27,12 @@ export default function Home() {
 
     // Define the endpoint mapping
     const endpointMapping = {
-      'Read': 'https://fotaWithKmola.api/readEndpoint',
-      'Write': 'https://fotaWithKmola.api/writeEndpoint',
-      'Erase': 'https://fotaWithKmola.api/eraseEndpoint',
-      'Update': 'https://fotaWithKmola.api/updateEndpoint', 
+      'Read': `http://192.168.1.3:5000/read_from_esp`,
+      'Write': `http://192.168.1.3:5000/get_chip_id`,
+      'Erase': `http://192.168.1.3:5000/erase_flash`,
+      'Update': 'http://192.168.1.3:5000/update_flash',
     };
+
 
     const endpoint = endpointMapping[choices.firstChoice];
 
@@ -41,19 +42,55 @@ export default function Home() {
       return;
     }
 
+
+    // Add query parameters based on choices
+    let params = {};
+    if (choices.firstChoice === 'Read') {
+      params = { address: choices.numberInput, ID_DEVICE: choices.secondChoice };
+    } else if (choices.firstChoice === 'Write' || choices.firstChoice === 'Roll_back') {
+      params = { ID_DEVICE: choices.secondChoice };
+    } else if (choices.firstChoice === 'Erase') {
+      params = { ID_DEVICE: choices.secondChoice };
+    }
+
     try {
       let response;
       if (choices.firstChoice === 'Update') {
-        response = await axios.post(endpoint, choices);
+        // form schema
+        //"json_data={\"ID_DEVICE\": \"15\", \"ID_OPERATION\": \"17\", \"CODESIZE\": 10, \"type_update\":1 \"FRAME_NUM\": 0, \"TOTAL_FRAMES\": 1}" -F "firmware=@diff.bin"
+        //ID_DEVICE SECOND_CHOICE
+        //ID_OPERATION FIRST_CHOICE
+        //CODESIZE SIZE OF FILEINPUT
+        //type_update 1 for patching 2 for full update
+        //FRAME_NUM 0
+        //TOTAL_FRAMES (SIZE OF FILEINPUT/1024) IF (SIZE OF FILEINPUT%1024) != 0 THEN TOTAL_FRAMES += 1
+        let tot_frame = choices.fileInput.size / 1024;
+        if (choices.fileInput.size % 1024 != 0) {
+          tot_frame += 1;
+        }
+        const json_data = {
+          ID_DEVICE: choices.secondChoice,
+          ID_OPERATION: choices.firstChoice,
+          CODESIZE: choices.fileInput.size,
+          type_update: 1,
+          FRAME_NUM: 0,
+          TOTAL_FRAMES: tot_frame
+        };
+        const formData = new FormData();
+        formData.append('json_data', JSON.stringify(json_data));
+        formData.append('firmware', choices.fileInput);
+
+        response = await axios.post(endpoint, formData);
         console.log("Making Request")
       } else {
-        response = await axios.get(endpoint);
+        response = await axios.get(endpoint, { params });
         console.log("Making Request")
       }
-
-      if (response && response.status === 200) {
+      console.log(response)
+      if (response) {
         setData(response.data);
         console.log("Request Done")
+        console.log(response.data)
       } else {
         setData({ failed: "Oops..! Sorry, failed to make the request" });
       }
@@ -71,10 +108,10 @@ export default function Home() {
     <div className='  flex gap-10 justify-center  flex-col md:flex-row  p-4'>
         
         <div className=" mx-5  pt-3 pb-4 rounded-xl  w-72 lg:w-[500px] ">
-          <h1 className="text-2xl font-bold mb-4">Select your choices</h1>
+          <h1 className="text-2xl font-bold mb-4 text-indigo-800">Select your choices</h1>
       
           <div className="mb-4 w-72 lg:w-[500px]">
-            <label htmlFor="firstChoice" className="block text-lg font-medium text-gray-700 mb-2">First Choice</label>
+            <label htmlFor="firstChoice" className="block text-lg font-medium text-indigo-800  mb-2">First Choice</label>
             <select
               id="firstChoice"
               value={choices.firstChoice}
@@ -82,15 +119,16 @@ export default function Home() {
               className="block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
             >
               <option value="" disabled>Select an option</option>
-              <option value="Read">Read</option>
-              <option value="Write">Write</option>
-              <option value="Erase">Erase</option>
-              <option value="Update">Update</option>
+              <option value="Read">ReadAddress</option>
+              <option value="Write">Get_Chip_id</option>
+              <option value="Erase">Erase_flash</option>
+              <option value="Update">Update_flash</option>
+              <option value="Roll_back">Roll_back</option>
             </select>
           </div>
       
           <div className="mb-4 w-72 lg:w-[500px]">
-            <label htmlFor="secondChoice" className="block text-lg font-medium text-gray-700 mb-2">Second Choice</label>
+            <label htmlFor="secondChoice" className="block text-lg font-medium text-indigo-800  mb-2">Second Choice</label>
             <select
               id="secondChoice"
               value={choices.secondChoice}
@@ -98,14 +136,14 @@ export default function Home() {
               className="block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
             >
               <option value="" disabled>Select an option</option>
-              <option value="Option A">Option A</option>
-              <option value="Option B">Option B</option>
-              <option value="Option C">Option C</option>
+              <option value="OptionA">ID_FIRST</option>
+              <option value="Option B">ID_SECOND</option>
+              <option value="Option C">ID_THIRD</option>
             </select>
           </div>
       
           <div className="mb-4 w-72 lg:w-[500px]">
-            <label htmlFor="numberInput" className="block text-lg font-medium text-gray-700 mb-2">Number Input (Enabled if "Read")</label>
+            <label htmlFor="numberInput" className="block text-lg font-medium text-indigo-800  mb-2">Number Input (Enabled if "Read")</label>
             <input
               type="number"
               id="numberInput"
@@ -117,11 +155,12 @@ export default function Home() {
           </div>
       
           <div className="mb-4 w-72 lg:w-[500px]">
-            <label htmlFor="fileInput" className="block text-lg font-medium text-gray-700 mb-2">File Input (Enabled if "Update")</label>
+            <label htmlFor="fileInput" className="block text-lg font-medium text-indigo-800  mb-2">File Input (Enabled if "Update")</label>
             <div className="relative flex items-center justify-center">
               <input
                 type="file"
                 id="fileInput"
+                accept=".bin"
                 onChange={handleChange}
                 disabled={choices.firstChoice !== 'Update'}
                 className={`absolute inset-0 w-full h-full opacity-0 ${choices.firstChoice === 'Update' ? "cursor-pointer" : "cursor-not-allowed"}`}
@@ -162,7 +201,7 @@ export default function Home() {
           </div>
         </div>
   
-        <div className="mx-5 border-4 border-indigo-500 px-3 pt-3 pb-4 w-72  lg:w-[500px] rounded-xl text-indigo-800 font-bold align-middle ">
+        <div className="mx-5 border-4 border-indigo-500 px-3 pt-3 pb-4 w-72  lg:w-[500px] rounded-xl text-indigo-800 font-bold align-middle min-h-[500px]">
           <h1 className='text-center text-2xl my-5 '>Request Result</h1>
           {Object.entries(data).map(([key, value]) => (
             <p className="text-lg" key={key}>
